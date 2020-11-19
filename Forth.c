@@ -4,17 +4,14 @@
 //Подсказка: Объявите массив символов размера, достаточного чтобы вместить самую длинную введенную строку. Используйте fgets(3), чтобы прочитать строку, и strlen(3), чтобы определить ее длину.
 //Помните, что strlen(3) не считает нулевой символ, завершающий строку. После определения длины строки, выделите блок памяти нужного размера и внесите новый указатель в список.
 
-//#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 const int BUFF_SIZE = 200;
-//int tmp_counter = 0;
 
 typedef struct List {
     char* string;
-//    size_t stringSize;
     struct List *next;
 } List;
 
@@ -25,7 +22,6 @@ int add_to_list(List** head, char* str){
         return 1;
     }
     tmp->string = str;
-//    tmp->stringSize = strlen(str);
     tmp->next = NULL;
     (*head)->next = tmp;
     return 0;
@@ -35,30 +31,16 @@ void print_list(List* head){
     List* tmp = head;
     while(tmp)
     {
-        printf("%s", tmp->string);
+        printf("%s\n", tmp->string);
         tmp = tmp->next;
     }
 }
-
-//void delete_list(List** head){
-//    List* next;
-//
-//    while(*head)//->next)            //change
-//    {
-//        tmp_counter++;
-//        next = (*head)->next;
-//        free((*head)->string);
-//        free(*head);
-//        *head = next;
-//    }
-//}
 
 void delete_list(List** head){
     List* next;
 
     while((*head)->next)
     {
-        //tmp_counter++;
         next = (*head)->next;
         free((*head)->string);
         free(*head);
@@ -67,79 +49,60 @@ void delete_list(List** head){
     free((*head)->string);
     free(*head);
 }
-//void delete_list2(List* head){
-//    List* next;
-//
-//    while(head)
-//    {
-//        tmp_counter++;
-//        next = head->next;
-//        free(head->string);
-//        free(head);
-//        head = next;
-//    }
-//}
 
 int main() {
     char tmpStr[BUFF_SIZE];
 
-    char* first_string = fgets(tmpStr, BUFF_SIZE, stdin);
-    if(!first_string){
+    List* first = (List*) malloc(sizeof(List));
+    if(!first){
+        perror("Memrore allocated");
+        return -1;
+    }
+    if(!fgets(tmpStr, BUFF_SIZE, stdin)){
         perror("Reading error!");
         return -1;
     }
-    char* string_to_add = strdup(tmpStr);
-    if(!string_to_add)
+    char* first_string = strndup(tmpStr, strlen(tmpStr) - 1);
+    if(!first_string)
     {
         perror("Memrore allocated");
         return -1;
     }
-    //free(first_string);
 
-    List* first = (List*) malloc(sizeof(List));
     first->next = NULL;
-    first->string = string_to_add;
-    //first->string = tmpStr;
+    first->string = first_string;
 
     List** tmp = &first;
     while(1){
-        char* tmp_string = fgets(tmpStr, BUFF_SIZE, stdin);
-        if(!tmp_string){
+        if(!fgets(tmpStr, BUFF_SIZE, stdin)){
             perror("Reading error!");
             tmp = NULL;
             break;
         }
-
-        char* string_to_add2 = strdup(tmpStr);
-        if(!string_to_add2)
+        char* string_to_add = strndup(tmpStr, strlen(tmpStr) - 1);
+        if(!string_to_add)
         {
             perror("Memrore allocated");
             tmp = NULL;
             break;
         }
 
-       if(!add_to_list(tmp, string_to_add2)){
+       if(!add_to_list(tmp, string_to_add)){
            tmp = &(*tmp)->next;
-//           printf("\n");
-//           free(tmp_string);
        } else {
            tmp = NULL;
-//           free(tmp_string);
            break;
        }
-        if(string_to_add2[0] == '.'){
+        if(string_to_add[0] == '.'){
             break;
         }
     }
+
     if(tmp){
         print_list(first);
     }
     if(first!= NULL)
         delete_list(&first);
-
-    //free(first_string);
-    //printf("%s", first_string);
-    //printf("%d\n", tmp_counter);
 
     exit(0);
 }
