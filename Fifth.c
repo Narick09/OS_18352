@@ -50,7 +50,6 @@ int parseFile(int fd, int file_size, off_t *strings_arr){
 //        strings_arr[i] = strings_arr[i] - strings_arr[i - 1] - 1;//check it
 //    }
 //    strings_arr[1] = strings_arr[0];
-    //strings_arr[0] = 0;
     return count;
 }
 
@@ -105,7 +104,7 @@ int main(int argc, char* argv[]) {
         scanf("%d", &string_number);
         if(string_number == 0){
             if(close(fd) == -1){
-                perror("Error of closing file");        //what reasons could be?
+                perror("Error of closing file");
                 return -1;
             }
             break;
