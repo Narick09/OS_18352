@@ -59,10 +59,6 @@ int main(int argc, char* argv[]) {
         printf("Please, enter non-negative string number:\n");
         scanf("%d", &string_number);
         if(string_number == 0){
-//            if(close(fd) == -1){
-//                perror("Usage: file closed with error. Don't worry about it.");
-//                return -1;
-//            }
             break;
         }
         if(string_number < 0){
@@ -81,7 +77,7 @@ int main(int argc, char* argv[]) {
     }
     if(close(fd) == -1){
         perror("Error: file closed with error.");
-        return -1;
+        exit(-1);
     }
     exit(0);
 }
