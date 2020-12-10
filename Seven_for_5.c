@@ -10,7 +10,7 @@
 
 const int MAX_STRINGS_NUMBER = 100;
 
-int parseFile(char* file, size_t file_size, size_t *strings_arr){
+size_t parseFile(char* file, size_t file_size, size_t *strings_arr){
     size_t count = 0;
     strings_arr[0] = 0;
     for(size_t i = 0; i < file_size; i++){
@@ -50,10 +50,8 @@ int main(int argc, char* argv[]) {
     lseek(fd,0L, SEEK_SET);
     char* file = mmap(0, file_size_on_chars, PROT_READ, MAP_SHARED, fd, 0);
 
-    int file_size_on_strings = parseFile(file, file_size_on_chars, ENTERS);
-
-    if(file_size_on_strings == -1)
-        exit(-1);
+    size_t file_size_on_strings = parseFile(file, file_size_on_chars, ENTERS);
+    
     int string_number = 1;
     while(string_number){
         printf("Please, enter non-negative string number:\n");
